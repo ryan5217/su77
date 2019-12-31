@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8" standalone="yes"?>
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
-    <title>Ryan</title>
-    <link>https://ryan5217.github.io/su77/</link>
-    <description>Recent content on Ryan</description>
+    <title>Posts on Ryan</title>
+    <link>https://ryan5217.github.io/su77/post/</link>
+    <description>Recent content in Posts on Ryan</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>en-us</language>
     <lastBuildDate>Tue, 31 Dec 2019 15:31:17 +0800</lastBuildDate>
     
-	<atom:link href="https://ryan5217.github.io/su77/index.xml" rel="self" type="application/rss+xml" />
+	<atom:link href="https://ryan5217.github.io/su77/post/index.xml" rel="self" type="application/rss+xml" />
     
     
     <item>
@@ -28,15 +28,6 @@ $ go get gopkg.in/gin-gonic/gin.v1 注意：确保 GOPATH GOROOT 已经配置</d
       
       <guid>https://ryan5217.github.io/su77/post/first/</guid>
       <description>接触gohu第一天  写点什么好呢 随便写点什么吧 写点什么 你高兴就好  </description>
-    </item>
-    
-    <item>
-      <title>About Me</title>
-      <link>https://ryan5217.github.io/su77/about/</link>
-      <pubDate>Tue, 31 Dec 2019 13:54:23 +0800</pubDate>
-      
-      <guid>https://ryan5217.github.io/su77/about/</guid>
-      <description>PHP开发工程师 GOlang开发工程师 </description>
     </item>
     
   </channel>

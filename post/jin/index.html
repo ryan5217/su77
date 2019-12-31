@@ -1,0 +1,674 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.63.0-DEV" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>Jin框架文档 &middot; Ryan</title>
+  <meta name="description" content="" />
+
+  
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://ryan5217.github.io/su77/"><h1>Ryan</h1></a>
+      <p class="lead">
+       just run run 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://ryan5217.github.io/su77/">Home</a> </li>
+        
+      </ul>
+    </nav>
+
+    <p>&copy; 2019. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>Jin框架文档</h1>
+  <time datetime=2019-12-31T15:31:17&#43;0800 class="post-date">Tue, Dec 31, 2019</time>
+  <ul>
+<li><a href="#install">安装与配置</a></li>
+<li><a href="#arch">框架架构</a>
+<ul>
+<li><a href="#life-circle">生命周期</a></li>
+<li><a href="#context">Context</a></li>
+</ul>
+</li>
+<li><a href="#router">路由</a>
+<ul>
+<li><a href="#basic-router">基本路由</a></li>
+<li><a href="#router-param">路由参数</a></li>
+<li><a href="#router-group">路由群组</a></li>
+</ul>
+</li>
+<li><a href="#controller">控制器</a></li>
+<li><a href="#request">请求</a>
+<ul>
+<li><a href="#request-header">请求头</a></li>
+<li><a href="#request-cookie">Cookies</a></li>
+<li><a href="#upload">上传文件</a></li>
+</ul>
+</li>
+<li><a href="#response">响应</a>
+<ul>
+<li><a href="#response-header">响应头</a></li>
+<li><a href="#response-cookie">附加Cookie</a></li>
+<li><a href="#response-string">字符串响应</a></li>
+<li><a href="#response-json">JSON响应</a></li>
+<li><a href="#response-view">视图响应</a></li>
+<li><a href="#response-file">文件下载</a></li>
+<li><a href="#response-redirect">重定向</a></li>
+<li><a href="#sync-async">同步异步</a></li>
+</ul>
+</li>
+<li><a href="#view">视图</a>
+<ul>
+<li><a href="#view-param">传参</a></li>
+<li><a href="#view-unit">视图组件</a></li>
+</ul>
+</li>
+<li><a href="#middleware">中间件</a>
+<ul>
+<li><a href="#middleware-use">分类使用</a></li>
+<li><a href="#middleware-create">创建中间件</a></li>
+<li><a href="#middleware-param">中间件参数</a></li>
+</ul>
+</li>
+<li><a href="#db">数据库</a>
+<ul>
+<li><a href="#db-mongodb">Mongodb</a></li>
+<li><a href="#db-mysql">Mysql</a></li>
+<li><a href="#orm">ORM</a></li>
+</ul>
+</li>
+<li><a href="#extensions">扩展包</a></li>
+<li><a href="#functions">常用方法</a>
+<ul>
+<li><a href="">gin</a></li>
+<li><a href="">Context</a></li>
+</ul>
+</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading">安装与配置</h3>
+<p>安装：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-sh" data-lang="sh">$ go get gopkg.in/gin-gonic/gin.v1
+</code></pre></div><p><code>注意：确保 GOPATH GOROOT 已经配置</code></p>
+<p>导入：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#f92672">import</span> <span style="color:#e6db74">&#34;gopkg.in/gin-gonic/gin.v1&#34;</span>
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-1">框架架构</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>HTTP 服务器</li>
+</ul>
+<p><strong>1.默认服务器</strong></p>
+<pre><code>router.Run()
+</code></pre><p><strong>2.HTTP 服务器</strong></p>
+<p>除了默认服务器中 <code>router.Run()</code> 的方式外，还可以用 <code>http.ListenAndServe()</code>，比如</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+	<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>, <span style="color:#a6e22e">router</span>)
+}
+</code></pre></div><p>或者自定义 HTTP 服务器的配置：</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+
+	<span style="color:#a6e22e">s</span> <span style="color:#f92672">:=</span> <span style="color:#f92672">&amp;</span><span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">Server</span>{
+		<span style="color:#a6e22e">Addr</span>:           <span style="color:#e6db74">&#34;:8080&#34;</span>,
+		<span style="color:#a6e22e">Handler</span>:        <span style="color:#a6e22e">router</span>,
+		<span style="color:#a6e22e">ReadTimeout</span>:    <span style="color:#ae81ff">10</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>,
+		<span style="color:#a6e22e">WriteTimeout</span>:   <span style="color:#ae81ff">10</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>,
+		<span style="color:#a6e22e">MaxHeaderBytes</span>: <span style="color:#ae81ff">1</span> <span style="color:#f92672">&lt;&lt;</span> <span style="color:#ae81ff">20</span>,
+	}
+	<span style="color:#a6e22e">s</span>.<span style="color:#a6e22e">ListenAndServe</span>()
+}
+</code></pre></div><p><strong>3.HTTP 服务器替换方案</strong>
+想无缝重启、停机吗? 以下有几种方式：</p>
+<p>我们可以使用 <a href="https://github.com/fvbock/endless">fvbock/endless</a> 来替换默认的 <code>ListenAndServe</code>。但是 windows 不能使用。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/&#34;</span>, <span style="color:#a6e22e">handler</span>)
+<span style="color:#75715e">// [...]
+</span><span style="color:#75715e"></span><span style="color:#a6e22e">endless</span>.<span style="color:#a6e22e">ListenAndServe</span>(<span style="color:#e6db74">&#34;:4242&#34;</span>, <span style="color:#a6e22e">router</span>)
+</code></pre></div><p>除了 endless 还可以用manners:</p>
+<p><a href="https://github.com/braintree/manners">manners</a> 兼容windows</p>
+<pre><code>manners.ListenAndServe(&quot;:8888&quot;, r)
+</code></pre><p>如果你使用的 golang 版本大于 1.8 版本, 那么可以用 http.Server 内置的 Shutdown 方法来实现优雅的关闭服务, 一个简单的示例代码如下:</p>
+<pre><code>srv := http.Server{
+    Addr: &quot;:8080&quot;,
+    Handler: router,
+}
+
+go func() {
+    if err :+ srv.ListenAndServe(); err != nil &amp;&amp; err != http.ErrServerClosed {
+        log.Fatalf(&quot;listen: %s\n&quot;, err)
+    }
+}
+
+// 其他代码, 等待关闭信号
+...
+
+ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+defer cancel()
+if err := srv.Shutdown(ctx); err != nil {
+    log.Fatal(&quot;Server Shutdown: &quot;, err)
+}
+log.Println(&quot;Server exiting&quot;)
+</code></pre><p>完整的代码见 <a href="https://github.com/gin-gonic/gin/blob/master/examples/graceful-shutdown/graceful-shutdown/server.go">graceful-shutdown</a>.</p>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>生命周期</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>Context</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-2">路由</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>基本路由
+gin 框架中采用的路由库是 httprouter。</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#75715e">// 创建带有默认中间件的路由:
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">// 日志与恢复中间件
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+	<span style="color:#75715e">//创建不带中间件的路由：
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//r := gin.New()
+</span><span style="color:#75715e"></span>
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/someGet&#34;</span>, <span style="color:#a6e22e">getting</span>)
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">POST</span>(<span style="color:#e6db74">&#34;/somePost&#34;</span>, <span style="color:#a6e22e">posting</span>)
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">PUT</span>(<span style="color:#e6db74">&#34;/somePut&#34;</span>, <span style="color:#a6e22e">putting</span>)
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">DELETE</span>(<span style="color:#e6db74">&#34;/someDelete&#34;</span>, <span style="color:#a6e22e">deleting</span>)
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">PATCH</span>(<span style="color:#e6db74">&#34;/somePatch&#34;</span>, <span style="color:#a6e22e">patching</span>)
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">HEAD</span>(<span style="color:#e6db74">&#34;/someHead&#34;</span>, <span style="color:#a6e22e">head</span>)
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">OPTIONS</span>(<span style="color:#e6db74">&#34;/someOptions&#34;</span>, <span style="color:#a6e22e">options</span>)
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>路由参数</li>
+</ul>
+<p>api 参数通过Context的Param方法来获取</p>
+<pre><code>router.GET(&quot;/string/:name&quot;, func(c *gin.Context) {
+    	name := c.Param(&quot;name&quot;)
+    	fmt.Println(&quot;Hello %s&quot;, name)
+    })
+</code></pre><p>URL 参数通过 DefaultQuery 或 Query 方法获取</p>
+<pre><code>// url 为 http://localhost:8080/welcome?name=ningskyer时
+// 输出 Hello ningskyer
+// url 为 http://localhost:8080/welcome时
+// 输出 Hello Guest
+router.GET(&quot;/welcome&quot;, func(c *gin.Context) {
+	name := c.DefaultQuery(&quot;name&quot;, &quot;Guest&quot;) //可设置默认值
+	// 是 c.Request.URL.Query().Get(&quot;lastname&quot;) 的简写
+	lastname := c.Query(&quot;lastname&quot;) 
+	fmt.Println(&quot;Hello %s&quot;, name)
+})
+</code></pre><p>表单参数通过 PostForm 方法获取</p>
+<pre><code>//form
+router.POST(&quot;/form&quot;, func(c *gin.Context) {
+	type := c.DefaultPostForm(&quot;type&quot;, &quot;alert&quot;)//可设置默认值
+	msg := c.PostForm(&quot;msg&quot;)
+	title := c.PostForm(&quot;title&quot;)
+	fmt.Println(&quot;type is %s, msg is %s, title is %s&quot;, type, msg, title)
+})
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>路由群组</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go">	<span style="color:#a6e22e">someGroup</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Group</span>(<span style="color:#e6db74">&#34;/someGroup&#34;</span>)
+    {
+        <span style="color:#a6e22e">someGroup</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/someGet&#34;</span>, <span style="color:#a6e22e">getting</span>)
+		<span style="color:#a6e22e">someGroup</span>.<span style="color:#a6e22e">POST</span>(<span style="color:#e6db74">&#34;/somePost&#34;</span>, <span style="color:#a6e22e">posting</span>)
+	}
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-3">控制器</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>数据解析绑定</li>
+</ul>
+<p>模型绑定可以将请求体绑定给一个类型，目前支持绑定的类型有 JSON, XML 和标准表单数据 (foo=bar&amp;boo=baz)。
+要注意的是绑定时需要给字段设置绑定类型的标签。比如绑定 JSON 数据时，设置 <code>json:&quot;fieldname&quot;</code>。
+使用绑定方法时，Gin 会根据请求头中  Content-Type  来自动判断需要解析的类型。如果你明确绑定的类型，你可以不用自动推断，而用 BindWith 方法。
+你也可以指定某字段是必需的。如果一个字段被 <code>binding:&quot;required&quot;</code> 修饰而值却是空的，请求会失败并返回错误。</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// Binding from JSON
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">type</span> <span style="color:#a6e22e">Login</span> <span style="color:#66d9ef">struct</span> {
+	<span style="color:#a6e22e">User</span>     <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">form:&#34;user&#34; json:&#34;user&#34; binding:&#34;required&#34;</span><span style="color:#e6db74">`</span>
+	<span style="color:#a6e22e">Password</span> <span style="color:#66d9ef">string</span> <span style="color:#e6db74">`</span><span style="color:#e6db74">form:&#34;password&#34; json:&#34;password&#34; binding:&#34;required&#34;</span><span style="color:#e6db74">`</span>
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+
+	<span style="color:#75715e">// 绑定JSON的例子 ({&#34;user&#34;: &#34;manu&#34;, &#34;password&#34;: &#34;123&#34;})
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">POST</span>(<span style="color:#e6db74">&#34;/loginJSON&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">json</span> <span style="color:#a6e22e">Login</span>
+
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">BindJSON</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">json</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">User</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;manu&#34;</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">json</span>.<span style="color:#a6e22e">Password</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;123&#34;</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;you are logged in&#34;</span>})
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusUnauthorized</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;unauthorized&#34;</span>})
+			}
+		}
+	})
+
+	<span style="color:#75715e">// 绑定普通表单的例子 (user=manu&amp;password=123)
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">POST</span>(<span style="color:#e6db74">&#34;/loginForm&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">form</span> <span style="color:#a6e22e">Login</span>
+		<span style="color:#75715e">// 根据请求头中 content-type 自动推断.
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Bind</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">form</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">form</span>.<span style="color:#a6e22e">User</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;manu&#34;</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">form</span>.<span style="color:#a6e22e">Password</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;123&#34;</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;you are logged in&#34;</span>})
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusUnauthorized</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;unauthorized&#34;</span>})
+			}
+		}
+	})
+	<span style="color:#75715e">// 绑定多媒体表单的例子 (user=manu&amp;password=123)
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">POST</span>(<span style="color:#e6db74">&#34;/login&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#66d9ef">var</span> <span style="color:#a6e22e">form</span> <span style="color:#a6e22e">LoginForm</span>
+		<span style="color:#75715e">// 你可以显式声明来绑定多媒体表单：
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// c.BindWith(&amp;form, binding.Form)
+</span><span style="color:#75715e"></span>		<span style="color:#75715e">// 或者使用自动推断:
+</span><span style="color:#75715e"></span>		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Bind</span>(<span style="color:#f92672">&amp;</span><span style="color:#a6e22e">form</span>) <span style="color:#f92672">==</span> <span style="color:#66d9ef">nil</span> {
+			<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">form</span>.<span style="color:#a6e22e">User</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;user&#34;</span> <span style="color:#f92672">&amp;&amp;</span> <span style="color:#a6e22e">form</span>.<span style="color:#a6e22e">Password</span> <span style="color:#f92672">==</span> <span style="color:#e6db74">&#34;password&#34;</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#ae81ff">200</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;you are logged in&#34;</span>})
+			} <span style="color:#66d9ef">else</span> {
+				<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#ae81ff">401</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;status&#34;</span>: <span style="color:#e6db74">&#34;unauthorized&#34;</span>})
+			}
+		}
+	})
+	<span style="color:#75715e">// Listen and serve on 0.0.0.0:8080
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>)
+}
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-4">请求</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>请求头</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>请求参数</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>Cookies</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>上传文件</li>
+</ul>
+<pre><code>router.POST(&quot;/upload&quot;, func(c *gin.Context) {
+
+    file, header , err := c.Request.FormFile(&quot;upload&quot;)
+    filename := header.Filename
+    fmt.Println(header.Filename)
+    out, err := os.Create(&quot;./tmp/&quot;+filename+&quot;.png&quot;)
+    if err != nil {
+        log.Fatal(err)
+    }
+    defer out.Close()
+    _, err = io.Copy(out, file)
+    if err != nil {
+        log.Fatal(err)
+    }   
+})
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-5">响应</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>响应头</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>附加Cookie</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>字符串响应</li>
+</ul>
+<pre><code>c.String(http.StatusOK, &quot;some string&quot;)
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>JSON/XML/YAML响应</li>
+</ul>
+<pre><code>r.GET(&quot;/moreJSON&quot;, func(c *gin.Context) {
+	// You also can use a struct
+	var msg struct {
+		Name    string `json:&quot;user&quot; xml:&quot;user&quot;`
+		Message string
+		Number  int
+	}
+	msg.Name = &quot;Lena&quot;
+	msg.Message = &quot;hey&quot;
+	msg.Number = 123
+	// 注意 msg.Name 变成了 &quot;user&quot; 字段
+	// 以下方式都会输出 :   {&quot;user&quot;: &quot;Lena&quot;, &quot;Message&quot;: &quot;hey&quot;, &quot;Number&quot;: 123}
+	c.JSON(http.StatusOK, gin.H{&quot;user&quot;: &quot;Lena&quot;, &quot;Message&quot;: &quot;hey&quot;, &quot;Number&quot;: 123})
+	c.XML(http.StatusOK, gin.H{&quot;user&quot;: &quot;Lena&quot;, &quot;Message&quot;: &quot;hey&quot;, &quot;Number&quot;: 123})
+	c.YAML(http.StatusOK, gin.H{&quot;user&quot;: &quot;Lena&quot;, &quot;Message&quot;: &quot;hey&quot;, &quot;Number&quot;: 123})
+	c.JSON(http.StatusOK, msg)
+	c.XML(http.StatusOK, msg)
+	c.YAML(http.StatusOK, msg)
+})
+		
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>视图响应</li>
+</ul>
+<p>先要使用 LoadHTMLTemplates() 方法来加载模板文件</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">router</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+	<span style="color:#75715e">//加载模板
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">LoadHTMLGlob</span>(<span style="color:#e6db74">&#34;templates/*&#34;</span>)
+	<span style="color:#75715e">//router.LoadHTMLFiles(&#34;templates/template1.html&#34;, &#34;templates/template2.html&#34;)
+</span><span style="color:#75715e"></span>	<span style="color:#75715e">//定义路由
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/index&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#75715e">//根据完整文件名渲染模板，并传递参数
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HTML</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#e6db74">&#34;index.tmpl&#34;</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{
+			<span style="color:#e6db74">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;Main website&#34;</span>,
+		})
+	})
+	<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>)
+}
+</code></pre></div><p>模板结构定义</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html">&lt;<span style="color:#f92672">html</span>&gt;
+	&lt;<span style="color:#f92672">h1</span>&gt;
+		{{ .title }}
+	&lt;/<span style="color:#f92672">h1</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+</code></pre></div><p>不同文件夹下模板名字可以相同，此时需要 LoadHTMLGlob() 加载两层模板路径</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">LoadHTMLGlob</span>(<span style="color:#e6db74">&#34;templates/**/*&#34;</span>)
+<span style="color:#a6e22e">router</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/posts/index&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HTML</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#e6db74">&#34;posts/index.tmpl&#34;</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{
+		<span style="color:#e6db74">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;Posts&#34;</span>,
+	})
+	<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">HTML</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#e6db74">&#34;users/index.tmpl&#34;</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{
+		<span style="color:#e6db74">&#34;title&#34;</span>: <span style="color:#e6db74">&#34;Users&#34;</span>,
+	})
+	
+}
+</code></pre></div><p>templates/posts/index.tmpl</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-html" data-lang="html"><span style="color:#75715e">&lt;!--</span><span style="color:#75715e"> 注意开头 define 与结尾 end 不可少 </span><span style="color:#75715e">--&gt;</span>
+{{ define &#34;posts/index.tmpl&#34; }}
+&lt;<span style="color:#f92672">html</span>&gt;&lt;<span style="color:#f92672">h1</span>&gt;
+	{{ .title }}
+&lt;/<span style="color:#f92672">h1</span>&gt;
+&lt;/<span style="color:#f92672">html</span>&gt;
+{{ end }}
+
+gin也可以使用自定义的模板引擎，如下
+
+```go
+import &#34;html/template&#34;
+
+func main() {
+	router := gin.Default()
+	html := template.Must(template.ParseFiles(&#34;file1&#34;, &#34;file2&#34;))
+	router.SetHTMLTemplate(html)
+	router.Run(&#34;:8080&#34;)
+}
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>文件响应</li>
+</ul>
+<pre><code>//获取当前文件的相对路径
+router.Static(&quot;/assets&quot;, &quot;./assets&quot;)
+//
+router.StaticFS(&quot;/more_static&quot;, http.Dir(&quot;my_file_system&quot;))
+//获取相对路径下的文件
+router.StaticFile(&quot;/favicon.ico&quot;, &quot;./resources/favicon.ico&quot;)
+
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>重定向</li>
+</ul>
+<pre><code>r.GET(&quot;/redirect&quot;, func(c *gin.Context) {
+	//支持内部和外部的重定向
+    c.Redirect(http.StatusMovedPermanently, &quot;http://www.baidu.com/&quot;)
+})
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>同步异步</li>
+</ul>
+<p>goroutine 机制可以方便地实现异步处理</p>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+	<span style="color:#75715e">//1. 异步
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/long_async&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#75715e">// goroutine 中只能使用只读的上下文 c.Copy()
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">cCp</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Copy</span>()
+		<span style="color:#66d9ef">go</span> <span style="color:#66d9ef">func</span>() {
+			<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+
+			<span style="color:#75715e">// 注意使用只读上下文
+</span><span style="color:#75715e"></span>			<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Done! in path &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">cCp</span>.<span style="color:#a6e22e">Request</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Path</span>)
+		}()
+	})
+	<span style="color:#75715e">//2. 同步
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/long_sync&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Sleep</span>(<span style="color:#ae81ff">5</span> <span style="color:#f92672">*</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Second</span>)
+
+		<span style="color:#75715e">// 注意可以使用原始上下文
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#e6db74">&#34;Done! in path &#34;</span> <span style="color:#f92672">+</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Request</span>.<span style="color:#a6e22e">URL</span>.<span style="color:#a6e22e">Path</span>)
+	})
+
+	<span style="color:#75715e">// Listen and serve on 0.0.0.0:8080
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>)
+}
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-6">视图</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>传参</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>视图组件</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-7">中间件</h3>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>分类使用方式</li>
+</ul>
+<pre><code>// 1.全局中间件
+router.Use(gin.Logger())
+router.Use(gin.Recovery())
+
+// 2.单路由的中间件，可以加任意多个
+router.GET(&quot;/benchmark&quot;, MyMiddelware(), benchEndpoint)
+
+// 3.群组路由的中间件
+authorized := router.Group(&quot;/&quot;, MyMiddelware())
+// 或者这样用：
+authorized := router.Group(&quot;/&quot;)
+authorized.Use(MyMiddelware())
+{
+	authorized.POST(&quot;/login&quot;, loginEndpoint)
+}
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>自定义中间件</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">//定义
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">Logger</span>() <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">HandlerFunc</span> {
+	<span style="color:#66d9ef">return</span> <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#a6e22e">t</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Now</span>()
+
+		<span style="color:#75715e">// 在gin上下文中定义变量
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Set</span>(<span style="color:#e6db74">&#34;example&#34;</span>, <span style="color:#e6db74">&#34;12345&#34;</span>)
+
+		<span style="color:#75715e">// 请求前
+</span><span style="color:#75715e"></span>
+		<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Next</span>()<span style="color:#75715e">//处理请求
+</span><span style="color:#75715e"></span>
+		<span style="color:#75715e">// 请求后
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">latency</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">time</span>.<span style="color:#a6e22e">Since</span>(<span style="color:#a6e22e">t</span>)
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Print</span>(<span style="color:#a6e22e">latency</span>)
+
+		<span style="color:#75715e">// access the status we are sending
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">status</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">Writer</span>.<span style="color:#a6e22e">Status</span>()
+		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">status</span>)
+	}
+}
+<span style="color:#75715e">//使用
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">New</span>()
+	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Use</span>(<span style="color:#a6e22e">Logger</span>())
+
+	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/test&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#75715e">//获取gin上下文中的变量
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">example</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MustGet</span>(<span style="color:#e6db74">&#34;example&#34;</span>).(<span style="color:#66d9ef">string</span>)
+
+		<span style="color:#75715e">// 会打印: &#34;12345&#34;
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">log</span>.<span style="color:#a6e22e">Println</span>(<span style="color:#a6e22e">example</span>)
+	})
+
+	<span style="color:#75715e">// 监听运行于 0.0.0.0:8080
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>)
+}
+</code></pre></div><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>
+<p>中间件参数</p>
+</li>
+<li>
+<p>内置中间件
+1.简单认证BasicAuth</p>
+</li>
+</ul>
+<div class="highlight"><pre style="color:#f8f8f2;background-color:#272822;-moz-tab-size:4;-o-tab-size:4;tab-size:4"><code class="language-go" data-lang="go"><span style="color:#75715e">// 模拟私有数据
+</span><span style="color:#75715e"></span><span style="color:#66d9ef">var</span> <span style="color:#a6e22e">secrets</span> = <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{
+	<span style="color:#e6db74">&#34;foo&#34;</span>:    <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;foo@bar.com&#34;</span>, <span style="color:#e6db74">&#34;phone&#34;</span>: <span style="color:#e6db74">&#34;123433&#34;</span>},
+	<span style="color:#e6db74">&#34;austin&#34;</span>: <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;austin@example.com&#34;</span>, <span style="color:#e6db74">&#34;phone&#34;</span>: <span style="color:#e6db74">&#34;666&#34;</span>},
+	<span style="color:#e6db74">&#34;lena&#34;</span>:   <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;email&#34;</span>: <span style="color:#e6db74">&#34;lena@guapa.com&#34;</span>, <span style="color:#e6db74">&#34;phone&#34;</span>: <span style="color:#e6db74">&#34;523443&#34;</span>},
+}
+
+<span style="color:#66d9ef">func</span> <span style="color:#a6e22e">main</span>() {
+	<span style="color:#a6e22e">r</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Default</span>()
+
+	<span style="color:#75715e">// 使用 gin.BasicAuth 中间件，设置授权用户
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">authorized</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Group</span>(<span style="color:#e6db74">&#34;/admin&#34;</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">BasicAuth</span>(<span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Accounts</span>{
+		<span style="color:#e6db74">&#34;foo&#34;</span>:    <span style="color:#e6db74">&#34;bar&#34;</span>,
+		<span style="color:#e6db74">&#34;austin&#34;</span>: <span style="color:#e6db74">&#34;1234&#34;</span>,
+		<span style="color:#e6db74">&#34;lena&#34;</span>:   <span style="color:#e6db74">&#34;hello2&#34;</span>,
+		<span style="color:#e6db74">&#34;manu&#34;</span>:   <span style="color:#e6db74">&#34;4321&#34;</span>,
+	}))
+
+	<span style="color:#75715e">// 定义路由
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">authorized</span>.<span style="color:#a6e22e">GET</span>(<span style="color:#e6db74">&#34;/secrets&#34;</span>, <span style="color:#66d9ef">func</span>(<span style="color:#a6e22e">c</span> <span style="color:#f92672">*</span><span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">Context</span>) {
+		<span style="color:#75715e">// 获取提交的用户名（AuthUserKey）
+</span><span style="color:#75715e"></span>		<span style="color:#a6e22e">user</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">MustGet</span>(<span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">AuthUserKey</span>).(<span style="color:#66d9ef">string</span>)
+		<span style="color:#66d9ef">if</span> <span style="color:#a6e22e">secret</span>, <span style="color:#a6e22e">ok</span> <span style="color:#f92672">:=</span> <span style="color:#a6e22e">secrets</span>[<span style="color:#a6e22e">user</span>]; <span style="color:#a6e22e">ok</span> {
+			<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;user&#34;</span>: <span style="color:#a6e22e">user</span>, <span style="color:#e6db74">&#34;secret&#34;</span>: <span style="color:#a6e22e">secret</span>})
+		} <span style="color:#66d9ef">else</span> {
+			<span style="color:#a6e22e">c</span>.<span style="color:#a6e22e">JSON</span>(<span style="color:#a6e22e">http</span>.<span style="color:#a6e22e">StatusOK</span>, <span style="color:#a6e22e">gin</span>.<span style="color:#a6e22e">H</span>{<span style="color:#e6db74">&#34;user&#34;</span>: <span style="color:#a6e22e">user</span>, <span style="color:#e6db74">&#34;secret&#34;</span>: <span style="color:#e6db74">&#34;NO SECRET :(&#34;</span>})
+		}
+	})
+
+	<span style="color:#75715e">// Listen and serve on 0.0.0.0:8080
+</span><span style="color:#75715e"></span>	<span style="color:#a6e22e">r</span>.<span style="color:#a6e22e">Run</span>(<span style="color:#e6db74">&#34;:8080&#34;</span>)
+}
+</code></pre></div><ol start="2">
+<li></li>
+</ol>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="heading-8">数据库</h2>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>Mongodb</li>
+</ul>
+<p>Golang常用的Mongodb驱动为 mgo.v2, <a href="http://godoc.org/gopkg.in/mgo.v2">查看文档</a></p>
+<p>mgo 使用方式如下：</p>
+<pre><code>//定义 Person 结构，字段须为首字母大写
+type Person struct {
+	Name string
+	Phone string
+}
+
+router.GET(&quot;/mongo&quot;, func(context *gin.Context){
+	//可本地可远程，不指定协议时默认为http协议访问，此时需要设置 mongodb 的nohttpinterface=false来打开httpinterface。
+	//也可以指定mongodb协议，如 &quot;mongodb://127.0.0.1:27017&quot;
+	var MOGODB_URI = &quot;127.0.0.1:27017&quot;
+	//连接
+	session, err := mgo.Dial(MOGODB_URI)
+	//连接失败时终止
+	if err != nil {
+        panic(err)
+    }
+	//延迟关闭，释放资源
+	defer session.Close()
+	//设置模式
+    session.SetMode(mgo.Monotonic, true)
+	//选择数据库与集合
+    c := session.DB(&quot;adatabase&quot;).C(&quot;acollection&quot;)
+    //插入文档
+    err = c.Insert(&amp;Person{Name:&quot;Ale&quot;, Phone:&quot;+55 53 8116 9639&quot;},
+               &amp;Person{Name:&quot;Cla&quot;,  Phone:&quot;+55 53 8402 8510&quot;})
+	//出错判断
+    if err != nil {
+            log.Fatal(err)
+    }
+	//查询文档
+    result := Person{}
+    //注意mongodb存储后的字段大小写问题
+    err = c.Find(bson.M{&quot;name&quot;: &quot;Ale&quot;}).One(&amp;result)
+    //出错判断
+    if err != nil {
+        log.Fatal(err)
+    }
+    fmt.Println(&quot;Phone:&quot;, result.Phone)
+})
+</code></pre><p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>Mysql</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<ul>
+<li>ORM</li>
+</ul>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h2 id="heading-9">扩展包</h2>
+<p><!-- raw HTML omitted --><!-- raw HTML omitted --></p>
+<h3 id="heading-10">常用方法</h3>
+<ul>
+<li>gin</li>
+<li>Context</li>
+</ul>
+
+</div>
+
+
+    </main>
+
+    
+  </body>
+</html>
