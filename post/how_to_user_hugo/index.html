@@ -1,0 +1,168 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" xml:lang="en-us" lang="en-us">
+<head>
+  <link href="https://gmpg.org/xfn/11" rel="profile">
+  <meta http-equiv="content-type" content="text/html; charset=utf-8">
+  <meta name="generator" content="Hugo 0.63.0-DEV" />
+
+  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <title>如何用hugo 搭建博客 &middot; Ryan</title>
+  <meta name="description" content="描述信息" />
+
+  
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/print.css" media="print">
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/poole.css">
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/syntax.css">
+  <link type="text/css" rel="stylesheet" href="https://ryan5217.github.io/su77/css/hyde.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Abril+Fatface|PT+Sans:400,400i,700">
+
+
+  
+  <link rel="apple-touch-icon-precomposed" sizes="144x144" href="/apple-touch-icon-144-precomposed.png">
+  <link rel="shortcut icon" href="/favicon.png">
+
+  
+  
+</head>
+
+  <body class="theme-base-0d ">
+  <aside class="sidebar">
+  <div class="container sidebar-sticky">
+    <div class="sidebar-about">
+      <a href="https://ryan5217.github.io/su77/"><h1>Ryan</h1></a>
+      <p class="lead">
+       just run run 
+      </p>
+    </div>
+
+    <nav>
+      <ul class="sidebar-nav">
+        <li><a href="https://ryan5217.github.io/su77/">Home</a> </li>
+        
+      </ul>
+    </nav>
+
+    <p>&copy; 2020. All rights reserved. </p>
+  </div>
+</aside>
+
+    <main class="content container">
+    <div class="post">
+  <h1>如何用hugo 搭建博客</h1>
+  <time datetime=2020-04-02T15:31:17&#43;0800 class="post-date">Thu, Apr 2, 2020</time>
+  <ol>
+<li>使用Hugo 创建博客
+hugo 安装成功后，使用hugo new site 命令创建博客：</li>
+</ol>
+<pre><code># 博客项目的名字为myblog
+hugo new site myblog
+</code></pre><p>这个命令会创建一个名为myblog 的目录，这就是博客的根目录。目录结构如下：</p>
+<pre><code>├── archetypes
+│   └── default.md
+├── config.toml         # 博客站点的配置文件
+├── content             # 博客文章所在目录
+├── data                
+├── layouts             # 网站布局
+├── static              # 一些静态内容
+└── themes              # 博客主题
+</code></pre><ol start="2">
+<li>下载博客主题
+创建好博客项目后，接下来是下载hugo博客的主题，这里有很多主题，我们可以任意挑选，比如我们选择了bootstrap4-blog 主题。</li>
+</ol>
+<p>然后在myblog 目录下使用git 命令来下载主题：</p>
+<pre><code>git clone https://github.com/alanorth/hugo-theme-bootstrap4-blog.git themes/hugo-theme-bootstrap4-blog
+</code></pre><p>下载下来的主题会放在themes 目录中：</p>
+<pre><code>└── hugo-theme-bootstrap4-blog
+    ├── CHANGELOG.md
+    ├── LICENSE.txt
+    ├── README.md
+    ├── archetypes
+    ├── assets
+    ├── exampleSite         # 本主题示例内容
+    |      ├── content      # 示例博客文章
+    │      |-- static
+    │      |-- config.toml  # 本主题配置
+    ├── i18n
+    ├── images
+    ├── layouts
+    ├── package-lock.json
+    ├── package.json
+    ├── screenshot.png
+    ├── source
+    ├── theme.toml      
+    └── webpack.config.js
+</code></pre><ol start="3">
+<li>使用主题
+我们将exampleSite 目录中的内容，复制到博客根目录myblog 中，在myblog 目录中执行命令：</li>
+</ol>
+<pre><code>cp themes/hugo-theme-bootstrap4-blog/exampleSite/* ./ -r
+</code></pre><ol start="4">
+<li>启动博客服务
+使用下面命令启动服务：</li>
+</ol>
+<pre><code>&gt;&gt;&gt; hugo server
+                   | EN  
+-------------------+-----
+  Pages            | 29  
+  Paginator pages  |  0  
+  Non-page files   |  0  
+  Static files     |  1  
+  Processed images |  0  
+  Aliases          | 12  
+  Sitemaps         |  1  
+  Cleaned          |  0  
+
+Built in 60 ms
+Watching for changes in /home/wp/t/myblog/{archetypes,content,data,layouts,static,themes}
+Watching for config changes in /home/wp/t/myblog/config.toml
+Environment: &quot;development&quot;
+Serving pages from memory
+Running in Fast Render Mode. For full rebuilds on change: hugo server --disableFastRender
+Web Server is available at http://localhost:1313/ (bind address 127.0.0.1)
+Press Ctrl+C to stop
+</code></pre><p>可以看到服务默认会在占用1313 端口，在浏览器中访问http://localhost:1313/ 地址。</p>
+<ol start="5">
+<li>编写博客文章
+你只需要按照Markdown 的格式编写自己的文章，让后将写好的文章放在myblog/content/posts，hugo 就会读取到这片文章，并将这片文章展示在比的博客中。</li>
+</ol>
+<p>与普通Markdown 文章不一样的地方是，你需要在文章的开头写入如下结构的内容，这些内容包含在三杠线之间，在三杠线下边就是Markdown 的正文了：</p>
+<pre><code>---
+文章属性内容
+---
+Markdown 正文
+</code></pre><p>这些内容会被hugo 解析，作为当前文章的一些属性，常用的属性如下：</p>
+<pre><code>---
+title: &quot;文章标题&quot;           # 文章标题
+author: &quot;作者&quot;              # 文章作者
+description : &quot;描述信息&quot;    # 文章描述信息
+date: 2015-09-28            # 文章编写日期
+lastmod: 2015-04-06         # 文章修改日期
+
+tags = [                    # 文章所属标签
+    &quot;文章标签1&quot;,
+    &quot;文章标签2&quot;
+]
+categories = [              # 文章所属标签
+    &quot;文章分类1&quot;,
+    &quot;文章分类2&quot;,
+]
+keywords = [                # 文章关键词
+    &quot;Hugo&quot;,
+    &quot;static&quot;,
+    &quot;generator&quot;,
+]
+
+next: /tutorials/github-pages-blog      # 下一篇博客地址
+prev: /tutorials/automated-deployments  # 上一篇博客地址
+---
+</code></pre>
+</div>
+
+
+    </main>
+
+    
+  </body>
+</html>
